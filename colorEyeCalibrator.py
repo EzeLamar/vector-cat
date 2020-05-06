@@ -9,17 +9,17 @@ def nothing(x):
 # default index
 index = 1
 prevIndex = 1
-boundariesHSV = [
-    ([8,0,50],[20,255,255]),   #naranja HUE 0-179; Sat 0-255; Val 0-255
-    ([21,0,50],[30,255,255]),   #amarillo HUE 0-179; Sat 0-255; Val 0-255
+boundariesEyeHSV = [
+    ([14,40,95],[19,211,233]),   #naranja HUE 0-179; Sat 0-255; Val 0-255
+    ([20,0,50],[30,255,255]),   #amarillo HUE 0-179; Sat 0-255; Val 0-255
     ([31,0,50],[65,255,255]),   #verde HUE 0-179; Sat 0-255; Val 0-255
-    ([80,0,50],[115,255,255]),  #celeste
+    ([80,21,50],[115,160,255]),  #celeste
 ]
 
 if len(sys.argv) < 2:
-    print('\nUsage: pictureColorTraker input_color_folder')
-    print('\tCOLOR_OPTION: (color) | grey')
-    print('\tRESIZE_IMAGE: (true) | false')
+    print('\nUsage: colorEyeCalibrator INPUT_COLOR_FOLDER')
+    print('\tINPUT_COLOR_FOLDER: naranja | amarillo | verde | celeste | test')
+    print('\tCONTROLS: \n\t\tn key: next image\n\t\tp key: previous image\n\t\tesc: close program')
     exit()
 
 # load image file to work..
@@ -36,8 +36,13 @@ elif (actualFolder == 'verde'):
     indexColor = 2
 elif (actualFolder == 'celeste'):
     indexColor = 3
+elif (actualFolder == 'test'):  #modo para testear los colores con el pack de fotos de prueba
+    print('modo testeo de los colores')
+else:
+    print('Error: color no encontrado.')
+    exit()
 
-(lower, upper) = boundariesHSV[indexColor]
+(lower, upper) = boundariesEyeHSV[indexColor]
 cv2.createTrackbar("L – H", "pepito", lower[0], 179, nothing)
 cv2.createTrackbar("L – S", "pepito", lower[1], 255, nothing)
 cv2.createTrackbar("L – V", "pepito", lower[2], 255, nothing)
