@@ -11,6 +11,20 @@ if __name__ == "__main__":
     optionSelected = 'color'
     resizeImage = False
 
+    # default eye colors
+    boundaries = [
+        ([17, 15, 100], [50, 56, 200]),     #RED
+        ([100, 17, 15], [200, 56, 50]),       #
+        ([25, 146, 190], [62, 174, 250]),   #
+        ([103, 86, 65], [145, 133, 128])    #
+    ]
+    boundariesHSV = [
+        ([8,0,50],[20,255,255]),   #naranja HUE 0-179; Sat 0-255; Val 0-255
+        ([21,0,50],[30,255,255]),   #amarillo HUE 0-179; Sat 0-255; Val 0-255
+        ([31,0,50],[65,255,255]),   #GREEN HUE 0-179; Sat 0-255; Val 0-255
+        ([80,0,50],[115,255,255]),   #BLUE HUE 0-179; Sat 0-255; Val 0-255
+    ]
+
     if len(sys.argv) < 3 or len(sys.argv) > 5:
         print('\nUsage: openImageWithCascade <haar_cascade_classifier> input_file <COLOR_OPTION> <RESIZE_IMAGE>')
         print('\tCOLOR_OPTION: (color) | grey')
@@ -79,6 +93,21 @@ if __name__ == "__main__":
 
         if resizeImage:
             croppedFace = cv2.resize(croppedFace, (96, 96), interpolation = cv2.INTER_AREA)
+
+        # loop over the boundaries
+        frameHSV = croppedFace #cv2.cvtColor(croppedFace, cv2.COLOR_BGR2HSV)
+        for (lower, upper) in boundariesHSV:
+            # create NumPy arrays from the boundaries
+            lower = np.array(lower, dtype = "uint8")
+            upper = np.array(upper, dtype = "uint8")
+            # find the colors within the specified boundaries and apply
+            # the mask
+            mask = cv2.inRange(frameHSV, lower, upper)
+            output = cv2.bitwise_and(frameHSV, frameHSV, mask = mask)
+            # show the images
+            cv2.imshow("images", np.hstack([frameHSV, output]))
+            cv2.waitKey(0)
+
         cv2.imshow("cropped", croppedFace)
         #write new cropped_image
         path = './media/output/'
