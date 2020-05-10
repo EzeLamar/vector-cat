@@ -17,3 +17,6 @@ Lo que quiero tratar de lograr:
 
 Pizarron de Trello del proyecto:
     + https://trello.com/b/OLuZzmaW/proyecto-final
+
+Ejemplo del que me base para obtener los contornos de los colores que fui obteniendo
+    + https://stackoverflow.com/questions/57282935/how-to-detect-area-of-pixels-with-the-same-color-using-opencv
