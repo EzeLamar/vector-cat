@@ -1,12 +1,15 @@
+import sys
+sys.path.insert(1, '../modelNN')
 from model import *
 import cv2
-import sys
 import os
 import numpy as np
 
 #constants
 BLACK_BG = (0, 0, 0)
 WHITE_COLOR = (255,255,255)
+PATH_MODAL = '../../model/prueba100fotos_inv_2.sh'
+PATH_CASCADE = '../../cascade/haarcascade_frontalcatface.xml'
 boundariesEyeHSV = [
     ([14,40,95],[19,211,233]),   #naranja
     ([20,0,50],[30,255,255]),   #amarillo
@@ -14,22 +17,21 @@ boundariesEyeHSV = [
     ([80,21,50],[115,160,255]),  #celeste
 ]
 
-if len(sys.argv) < 3:
-    print('\nUsage: colorEyeCalibrator INPUT_COLOR_FOLDER input_image')
-    print('\tINPUT_COLOR_FOLDER: naranja | amarillo | verde | celeste | test')
+if len(sys.argv) != 2:
+    print('\nUsage: colorEyeCalibrator input_image')
     print('\tinput_image: name of image to scan; example: "image1"')
     exit()
 
 # load image to scan..
 actualFolder = 'test'    #sys.argv[1]
-actualImage = sys.argv[3]
-picturePath = './media/input/ojos/'+actualFolder+'/'+actualImage+'.jpg'
+actualImage = sys.argv[1]
+picturePath = '../../media/input/ojos/'+actualFolder+'/'+actualImage+'.jpg'
 
 # Load the model built in the previous step
-model = load(os.path.abspath(sys.argv[1]))
+model = load(os.path.abspath(PATH_MODAL))
 
 # Face cascade to detect faces
-face_cascade = cv2.CascadeClassifier(os.path.abspath(sys.argv[2]))
+face_cascade = cv2.CascadeClassifier(os.path.abspath(PATH_CASCADE))
 
 # Process current original
 original = cv2.imread(picturePath,cv2.IMREAD_COLOR)

@@ -29,7 +29,7 @@ if len(sys.argv) < 2:
 
 # load image file to work..
 actualFolder = sys.argv[1]
-pictureFolder = './media/input/ojos/'+actualFolder
+pictureFolder = '../../media/input/ojos/'+actualFolder
 
 cv2.namedWindow("toolbars")
 

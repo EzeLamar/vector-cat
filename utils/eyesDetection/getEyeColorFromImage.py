@@ -7,6 +7,9 @@ import time
 
 
 if __name__ == "__main__":
+    # constants
+    PATH_CASCADE = '../../cascade/haarcascade_frontalcatface.xml'
+
     # default value options
     optionSelected = 'color'
     resizeImage = False
@@ -25,27 +28,27 @@ if __name__ == "__main__":
         ([80,0,50],[115,255,255]),   #BLUE HUE 0-179; Sat 0-255; Val 0-255
     ]
 
-    if len(sys.argv) < 3 or len(sys.argv) > 5:
-        print('\nUsage: openImageWithCascade <haar_cascade_classifier> input_file <COLOR_OPTION> <RESIZE_IMAGE>')
+    if len(sys.argv) < 2 or len(sys.argv) > 5:
+        print('\nUsage: openImageWithCascade input_file <COLOR_OPTION> <RESIZE_IMAGE>')
         print('\tCOLOR_OPTION: (color) | grey')
         print('\tRESIZE_IMAGE: (true) | false')
         exit()
 
     if len(sys.argv) >= 4:
-        optionSelected = sys.argv[3]
+        optionSelected = sys.argv[2]
     if len(sys.argv) == 5:
-        resizeImage = sys.argv[4] == 'true'
+        resizeImage = sys.argv[3] == 'true'
 
     # Face cascade to detect faces
     print('Loading Haar Cascade for detection..')
-    face_cascade = cv2.CascadeClassifier(os.path.abspath(sys.argv[1]))
+    face_cascade = cv2.CascadeClassifier(os.path.abspath(PATH_CASCADE))
     print('Loading Done.')
     # Keep looping
     print('Detecting and Cropping Face...')
 
     # load image file to work..
-    actualImage = sys.argv[2]
-    frame = cv2.imread('./media/input/'+actualImage,cv2.IMREAD_COLOR)
+    actualImage = sys.argv[1]
+    frame = cv2.imread('../../media/input/'+actualImage+'.jpg',cv2.IMREAD_COLOR)
 
     # Process current frame
     frame = cv2.flip(frame, 1)
