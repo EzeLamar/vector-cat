@@ -7,21 +7,24 @@ def nothing(x):
     pass
 
 #constants
+MUST_WAIT = 0
+DONT_WAIT = 1
 PINK_BG = (120, 0, 255)
 BLACK_BG = (0, 0, 0)
 PINK_BG = (255,255,0)
 WHITE_BG = (255, 255, 255)
 
 # default index
+waitingKey = DONT_WAIT
 index = 1
 prevIndex = 1
 boundariesEyeHSV = [
-    ([0,0,137],[179,72,255]),       #blanco        [0]  listo
-    ([0,0,0],[179,72,255]),       #gris          [1]
-    ([10,60,0],[26,171,255]),     #naranjaClaro  [2]
-    ([10,130,125],[14,255,176]),   #naranjaOscuro [3]
+    ([0,0,162],[179,51,255]),       #blanco        [0]  listo
+    ([0,0,0],[179,31,123]),       #gris          [1]    listo
+    ([10,60,0],[26,171,255]),     #naranjaClaro  [2]    listo
+    ([10,130,125],[14,255,176]),   #naranjaOscuro [3]   listo
     ([0,0,0],[179,62,69]),          #marron        [4]
-    ([0,0,0],[179,255,69]),         #negro         [5]  listo
+    ([0,32,0],[179,255,69]),         #negro         [5]  listo
 ]
 
 if len(sys.argv) < 2:
@@ -48,6 +51,9 @@ elif (actualFolder == 'marron'):
     indexColor = 4
 elif (actualFolder == 'negro'):
     indexColor = 5
+elif (actualFolder == 'test'):
+    indexColor = 0
+    waitingKey = MUST_WAIT
 else:
     print('Error: color no encontrado.')
     exit()
@@ -71,6 +77,30 @@ while True:
     u_s = cv2.getTrackbarPos("U – S", "toolbars")
     u_v = cv2.getTrackbarPos("U – V", "toolbars")
 
+    actualColor = ''
+    if (actualFolder == 'test'):
+        if (indexColor == 0):
+            actualColor = 'blanco'
+        elif (indexColor == 1):
+            actualColor = 'gris'
+        elif (indexColor == 2):
+            actualColor = 'naranjaClaro'
+        elif (indexColor == 3):
+            actualColor = 'naranjaOscuro'
+        elif (indexColor == 4):
+            actualColor = 'marron'
+        elif (indexColor == 5):
+            actualColor = 'negro'
+
+        print('actual color: '+actualColor)
+        (lower, upper) = boundariesEyeHSV[indexColor]
+        l_h = lower[0]
+        l_s = lower[1]
+        l_v = lower[2]
+        u_h = upper[0]
+        u_s = upper[1]
+        u_v = upper[2]
+
     lower_blue = np.array([l_h, l_s, l_v])
     upper_blue = np.array([u_h, u_s, u_v])
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
@@ -82,7 +112,7 @@ while True:
     
     # apply erode & dilate to mask. After detect contours
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-    maskED = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=0)
+    maskED = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
     cnts = cv2.findContours(maskED, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
     
@@ -93,21 +123,34 @@ while True:
         colorArea += cv2.contourArea(c)
         cv2.drawContours(frame,[c], 0, (0,0,0), 2)
     percentageArea = (colorArea*100)/totalArea
-    print('color Area:'+str(percentageArea)+'%')
+    print('\tcolor Area:'+str(percentageArea)+'%')
 
 
     cv2.imshow("frame", frame)
     #cv2.imshow("mask", mask)
     cv2.imshow("maskED", maskED)
-    cv2.imshow("result",coloured)
+    if (actualFolder == 'test'):
+        cv2.imshow(actualColor, coloured)
+    else:
+        cv2.imshow("result",coloured)
 
-    key = cv2.waitKey(1)
+    key = cv2.waitKey(waitingKey)
     if key == 27:
-        break
-    if key == 115:          #char 's'
-        break
-    elif key == 110:        #char 'n'
-        index = index + 1
-    elif key == 112:        #char 'p'
-        index = index - 1
+            break
+    if (actualFolder == 'test'):
+        if key == 110:        #char 'n'
+            index = index + 1
+            indexColor = 0
+        elif key == 112:        #char 'p'
+            index = index - 1
+            indexColor = 0
+        else:
+            indexColor += 1
+            if indexColor > 5:
+                break
+    else:
+        if key == 110:        #char 'n'
+            index = index + 1
+        elif key == 112:        #char 'p'
+            index = index - 1
 cv2.destroyAllWindows()
