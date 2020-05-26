@@ -11,7 +11,7 @@ MUST_WAIT = 0
 DONT_WAIT = 1
 PINK_BG = (120, 0, 255)
 BLACK_BG = (0, 0, 0)
-PINK_BG = (255,255,0)
+PINK_BG = (255,0,255)
 WHITE_BG = (255, 255, 255)
 
 # default index
@@ -20,10 +20,10 @@ index = 1
 prevIndex = 1
 boundariesEyeHSV = [
     ([0,0,162],[179,51,255]),       #blanco        [0]  listo
-    ([0,0,0],[179,31,123]),       #gris          [1]    listo
-    ([10,60,0],[26,171,255]),     #naranjaClaro  [2]    listo
-    ([10,130,125],[14,255,176]),   #naranjaOscuro [3]   listo
-    ([0,0,0],[179,62,69]),          #marron        [4]
+    ([27,0,0],[179,76,140]),       #gris          [1]    listo
+    ([10,60,108],[26,171,255]),     #naranjaClaro  [2]  listo
+    ([10,130,125],[15,255,200]),   #naranjaOscuro [3]   listo
+    ([0,0,0],[179,76,69]),          #marron        [4]  DESCARTADO
     ([0,32,0],[179,255,69]),         #negro         [5]  listo
 ]
 
@@ -32,14 +32,15 @@ FaceColours = [
     [200,200,200],       #gris          [1]
     [84,168,255],    #naranjaClaro  [2]
     [0,56,112],   #naranjaOscuro [3]
-    [5,33,58],    #marron        [4]
+    #[5,33,58],    #marron        [4]    DESCARTADO, lo uso como negro
+    [0,0,0],        # reemplazo del marron
     [0,0,0],      #negro         [5]
 ]
 
 
 if len(sys.argv) < 2:
     print('\nUsage: colorEyeCalibrator INPUT_COLOR_FOLDER')
-    print('\tINPUT_COLOR_FOLDER: blanco | gris | marron | naranja | negro')
+    print('\tINPUT_COLOR_FOLDER: blanco | gris | marron | naranja | negro | test <index_image>')
     print('\tCONTROLS: \n\t\tn key: next image\n\t\tp key: previous image\n\t\tesc: close program')
     exit()
 
@@ -64,6 +65,7 @@ elif (actualFolder == 'negro'):
 elif (actualFolder == 'test'):
     indexColor = 0
     waitingKey = MUST_WAIT
+    index = sys.argv[2]
 else:
     print('Error: color no encontrado.')
     exit()
