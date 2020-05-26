@@ -27,6 +27,16 @@ boundariesEyeHSV = [
     ([0,32,0],[179,255,69]),         #negro         [5]  listo
 ]
 
+FaceColours = [
+    [255,255,255],      #blanco        [0]
+    [200,200,200],       #gris          [1]
+    [84,168,255],    #naranjaClaro  [2]
+    [0,56,112],   #naranjaOscuro [3]
+    [5,33,58],    #marron        [4]
+    [0,0,0],      #negro         [5]
+]
+
+
 if len(sys.argv) < 2:
     print('\nUsage: colorEyeCalibrator INPUT_COLOR_FOLDER')
     print('\tINPUT_COLOR_FOLDER: blanco | gris | marron | naranja | negro')
@@ -37,7 +47,7 @@ if len(sys.argv) < 2:
 actualFolder = sys.argv[1]
 pictureFolder = '../../media/input/spots/'+actualFolder
 
-cv2.namedWindow("toolbars")
+cv2.namedWindow("pepe")
 
 if (actualFolder == 'blanco'):
     indexColor = 0
@@ -59,23 +69,30 @@ else:
     exit()
 
 (lower, upper) = boundariesEyeHSV[indexColor]
-cv2.createTrackbar("L – H", "toolbars", lower[0], 179, nothing)
-cv2.createTrackbar("L – S", "toolbars", lower[1], 255, nothing)
-cv2.createTrackbar("L – V", "toolbars", lower[2], 255, nothing)
-cv2.createTrackbar("U – H", "toolbars", upper[0], 179, nothing)
-cv2.createTrackbar("U – S", "toolbars", upper[1], 255, nothing)
-cv2.createTrackbar("U – V", "toolbars", upper[2], 255, nothing)
+cv2.createTrackbar("L – H", "pepe", lower[0], 179, nothing)
+cv2.createTrackbar("L – S", "pepe", lower[1], 255, nothing)
+cv2.createTrackbar("L – V", "pepe", lower[2], 255, nothing)
+cv2.createTrackbar("U – H", "pepe", upper[0], 179, nothing)
+cv2.createTrackbar("U – S", "pepe", upper[1], 255, nothing)
+cv2.createTrackbar("U – V", "pepe", upper[2], 255, nothing)
+
+frame = cv2.imread(pictureFolder+'/cat'+str(index)+'.jpg',cv2.IMREAD_COLOR)
+black_frame = np.zeros(frame.shape,np.uint8)
+black_frame[:,:]= PINK_BG
+finalFaceMask = black_frame.copy()  # Mascara negra que tendrá el resultado final de los filtros de la cara
 
 while True:
     frame = cv2.imread(pictureFolder+'/cat'+str(index)+'.jpg',cv2.IMREAD_COLOR)
+    # black_frame = np.zeros(frame.shape,np.uint8)
+    # finalFaceMask = black_frame.copy()  # Mascara negra que tendrá el resultado final de los filtros de la cara
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    l_h = cv2.getTrackbarPos("L – H", "toolbars")
-    l_s = cv2.getTrackbarPos("L – S", "toolbars")
-    l_v = cv2.getTrackbarPos("L – V", "toolbars")
-    u_h = cv2.getTrackbarPos("U – H", "toolbars")
-    u_s = cv2.getTrackbarPos("U – S", "toolbars")
-    u_v = cv2.getTrackbarPos("U – V", "toolbars")
+    l_h = cv2.getTrackbarPos("L – H", "pepe")
+    l_s = cv2.getTrackbarPos("L – S", "pepe")
+    l_v = cv2.getTrackbarPos("L – V", "pepe")
+    u_h = cv2.getTrackbarPos("U – H", "pepe")
+    u_s = cv2.getTrackbarPos("U – S", "pepe")
+    u_v = cv2.getTrackbarPos("U – V", "pepe")
 
     actualColor = ''
     if (actualFolder == 'test'):
@@ -115,7 +132,11 @@ while True:
     maskED = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel, iterations=1)
     cnts = cv2.findContours(maskED, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-    
+
+    # apply mask in finalMask with their colour
+    if (actualFolder == 'test'):
+        finalFaceMask[np.where((maskED == [255] ))] = FaceColours[indexColor]
+
     # calculate area of this color in the image
     totalArea = np.size(frame, 0) * np.size(frame, 1)
     colorArea = 0
@@ -129,6 +150,7 @@ while True:
     cv2.imshow("frame", frame)
     #cv2.imshow("mask", mask)
     cv2.imshow("maskED", maskED)
+    cv2.imshow("finalMask", finalFaceMask)
     if (actualFolder == 'test'):
         cv2.imshow(actualColor, coloured)
     else:
