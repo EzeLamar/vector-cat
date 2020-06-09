@@ -8,8 +8,6 @@ import numpy as np
 #constants
 BLACK_BG = (0, 0, 0)
 WHITE_COLOR = (255,255,255)
-PATH_MODAL = '../../model/prueba100fotos_inv_2.sh'
-PATH_CASCADE = '../../cascade/haarcascade_frontalcatface.xml'
 eyeColours = [
     'naranja',
     'amarillo',
@@ -23,7 +21,7 @@ boundariesEyeHSV = {
     'celeste' : ([80,21,50],[115,160,255]),  #celeste
 }
 
-def detectEyesFromFrame(originalFrame):
+def detectEyesFromFrame(originalFrame, model, face_cascade):
     # percentage of colours detected
     colorArea = {
         'naranja': 0,
@@ -38,11 +36,6 @@ def detectEyesFromFrame(originalFrame):
         'verde': 0,
         'celeste': 0,
     }
-    # Load the model built in the previous step
-    model = load(os.path.abspath(PATH_MODAL))
-
-    # Face cascade to detect faces
-    face_cascade = cv2.CascadeClassifier(os.path.abspath(PATH_CASCADE))
 
     # Process current originalFrame
     originalFrame = cv2.flip(originalFrame, 1)
@@ -97,7 +90,7 @@ def detectEyesFromFrame(originalFrame):
             cv2.circle(face_resized_color, keypoint, 1, (0,255,0), 1)
         originalDots[y:y+h, x:x+w] = cv2.resize(face_resized_color, original_shape, interpolation = cv2.INTER_CUBIC)
     # show originalFrame picture with dots
-    cv2.imshow("face detected", originalDots)
+    #cv2.imshow("face detected", originalDots)
     # draw mask of eyes detected
     leftEyePoints = [points[0], points[1], points[2], points[3], points[0]]
     rightEyePoints = [points[10], points[11], points[12], points[13], points[10]]
@@ -106,7 +99,7 @@ def detectEyesFromFrame(originalFrame):
     ellipseRightEye = cv2.fitEllipse(np.array(rightEyePoints))  #from 10 to 13 second eye
     cv2.ellipse(face_resized_maskEyes,ellipseRightEye,WHITE_COLOR,-1)
     maskEyes[y:y+h, x:x+w] = cv2.resize(face_resized_maskEyes, original_shape, interpolation = cv2.INTER_CUBIC)
-    cv2.imshow('mascara ojos', maskEyes)
+    #cv2.imshow('mascara ojos', maskEyes)
     # use maskEyes to filter only the eyes of originalFrame image
     originalEyes = originalFrame.copy()
     originalEyes[np.where((maskEyes!=WHITE_COLOR).all(axis=2))] = BLACK_BG
@@ -135,41 +128,29 @@ def detectEyesFromFrame(originalFrame):
             colorArea[actualColour] += cv2.contourArea(c)
             #cv2.drawContours(originalEyes,[c], 0, (0,0,0), 2)
         totalColorArea += colorArea[actualColour]
-        cv2.imshow("maskED", maskED)
-        cv2.imshow(actualColour, coloured)
+        #cv2.imshow("maskED", maskED)
+        #cv2.imshow(actualColour, coloured)
 
-        key = cv2.waitKey(0)
+        """ key = cv2.waitKey(0)
         if key == 27:
-            break
+            break """
 
     for colour in eyeColours:
         percentageColorArea[colour] = colorArea[colour]*100/totalColorArea
     return percentageColorArea
 
-#main:
-if len(sys.argv) != 2:
-    print('\nUsage: colorEyeCalibrator input_image')
-    print('\tinput_image: name of image to scan; example: "image1"')
-    exit()
+def getPrincipalEyeColourFromFrame(originalFrame, model, face_cascade):
+    percentageColoursDetected = detectEyesFromFrame(originalFrame, model, face_cascade)
 
-# load image to scan..
-actualFolder = 'test'    #sys.argv[1]
-actualImage = sys.argv[1]
-picturePath = '../../media/input/ojos/'+actualFolder+'/'+actualImage+'.jpg'
-originalFrame = cv2.imread(picturePath,cv2.IMREAD_COLOR)
-percentageColoursDetected = detectEyesFromFrame(originalFrame)
-
-# show percentage of every colour & calcultate the principal colour
-principalEyeColor = None
-print('\nPorcentajes detectados de los colores buscados:')
-for colour in eyeColours:
-    print('\t'+colour+': '+str(percentageColoursDetected[colour])+' %')
-    if principalEyeColor == None:
-        principalEyeColor = colour
-    elif percentageColoursDetected[principalEyeColor] < percentageColoursDetected[colour]:
-        principalEyeColor = colour
-print('-------------------------------')
-print('El color que mas aparece es "'+principalEyeColor+'"')
-print('-------------------------------')
-
-cv2.destroyAllWindows()
+    # show percentage of every colour & calcultate the principal colour
+    principalEyeColor = None
+    print('\nPorcentajes detectados de los colores buscados:')
+    for colour in eyeColours:
+        print('\t'+colour+': '+str(percentageColoursDetected[colour])+' %')
+        if principalEyeColor == None:
+            principalEyeColor = colour
+        elif percentageColoursDetected[principalEyeColor] < percentageColoursDetected[colour]:
+            principalEyeColor = colour
+    print('-------------------------------')
+    print('El color de ojos que mas aparece es "'+principalEyeColor+'"')
+    print('-------------------------------')

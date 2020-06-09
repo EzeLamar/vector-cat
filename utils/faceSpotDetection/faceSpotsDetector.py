@@ -100,11 +100,4 @@ def generateAllColoursMask(frame):
 
     for colour in NameColours:
         finalFaceMask[np.where((extractSpotFromFrame(frame,colour) == [255] ))] = FaceColours[colour]
-        cv2.imshow('finalMask', finalFaceMask)
-    cv2.waitKey(0)
     return finalFaceMask
-
-frame = cv2.imread('../../media/input/spots/negro/cat1.jpg',cv2.IMREAD_COLOR)
-cv2.imshow('originalFrame', frame)
-generateAllColoursMask(frame)
-cv2.destroyAllWindows()
