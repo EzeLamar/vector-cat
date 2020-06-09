@@ -83,15 +83,16 @@ def extractSpotFromFrame(originalFrame, colourToFilter):
     percentageArea = (colorArea*100)/totalArea
     print('\t'+colourToFilter+' Area:'+str(percentageArea)+'%')
 
-    cv2.imshow("originalFrame", originalFrame)
+    #cv2.imshow("originalFrame", originalFrame)
     #cv2.imshow("mask", mask)
-    cv2.imshow("maskED", maskED)
+    #cv2.imshow("maskED", maskED)
     #cv2.imshow(colourToFilter, coloured)
-    cv2.imshow(colourToFilter+"_filter", finalFaceMask)
+    #cv2.imshow(colourToFilter+"_filter", finalFaceMask)
     return maskED
 
-def generateAllColoursMask():
-    frame = cv2.imread('../../media/input/spots/negro/cat5.jpg',cv2.IMREAD_COLOR)
+# input: frame to get the spot colours
+# return: frame that contain the mask
+def generateAllColoursMask(frame):
     # finalMask
     black_frame = np.zeros(frame.shape,np.uint8)
     black_frame[:,:]= PINK_BG
@@ -100,7 +101,10 @@ def generateAllColoursMask():
     for colour in NameColours:
         finalFaceMask[np.where((extractSpotFromFrame(frame,colour) == [255] ))] = FaceColours[colour]
         cv2.imshow('finalMask', finalFaceMask)
-        cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    return finalFaceMask
 
-generateAllColoursMask()
+frame = cv2.imread('../../media/input/spots/negro/cat1.jpg',cv2.IMREAD_COLOR)
+cv2.imshow('originalFrame', frame)
+generateAllColoursMask(frame)
+cv2.destroyAllWindows()
