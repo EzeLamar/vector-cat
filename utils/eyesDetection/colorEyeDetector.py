@@ -87,10 +87,10 @@ def detectEyesFromFrame(originalFrame, model, face_cascade):
 
         # Add KEYPOINTS to the originalFrame
         for keypoint in points[0:21]:
-            cv2.circle(face_resized_color, keypoint, 1, (0,255,0), 1)
+            cv2.circle(face_resized_color, keypoint, 1, (0,0,255), 1)
         originalDots[y:y+h, x:x+w] = cv2.resize(face_resized_color, original_shape, interpolation = cv2.INTER_CUBIC)
     # show originalFrame picture with dots
-    #cv2.imshow("face detected", originalDots)
+    cv2.imshow("face detected", originalDots)
     # draw mask of eyes detected
     leftEyePoints = [points[0], points[1], points[2], points[3], points[0]]
     rightEyePoints = [points[10], points[11], points[12], points[13], points[10]]
