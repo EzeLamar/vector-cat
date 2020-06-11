@@ -4,9 +4,9 @@ from model import *
 import cv2
 import os
 import numpy as np
-from utils.cropCascade import getEyeMask
-from utils.cropCascade import getNoseMask
-from utils.cropCascade import getFaceMask
+from utils.maskGenerator import getEyeMask
+from utils.maskGenerator import getNoseMask
+from utils.maskGenerator import getFaceMask
 
 #constants
 BLACK_BG = (0, 0, 0)
