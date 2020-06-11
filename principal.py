@@ -26,7 +26,7 @@ cv2.waitKey(0)
 # crop the cat face (if there is a cat face) & get the mask
 cropedFrame = cropCascade(frame,face_cascade)
 maskFrame = generateAllColoursMask(cropedFrame)
-cv2.imshow('faceMask', maskFrame)
+cv2.imshow('faceMaskColor', maskFrame)
 # get the principal colour of the eyes cat
 getPrincipalEyeColourFromFrame(cropedFrame, model, face_cascade)
 cv2.waitKey(0)

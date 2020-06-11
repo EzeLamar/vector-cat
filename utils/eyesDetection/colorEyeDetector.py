@@ -4,6 +4,9 @@ from model import *
 import cv2
 import os
 import numpy as np
+from utils.cropCascade import getEyeMask
+from utils.cropCascade import getNoseMask
+from utils.cropCascade import getFaceMask
 
 #constants
 BLACK_BG = (0, 0, 0)
@@ -62,7 +65,7 @@ def detectEyesFromFrame(originalFrame, model, face_cascade):
         # crop face to face detected
         gray_crop_face = gray[y:y+h, x:x+w]
         color_crop_face = originalFrame[y:y+h, x:x+w]
-        maskEyes_crop_face = maskEyes[y:y+h, x:x+w]
+        maskEyes_crop_face = np.zeros(color_crop_face.shape,np.uint8)
 
         # Normalize to match the input format of the model - Range of pixel to [0, 1]
         gray_normalized = gray_crop_face / 255
@@ -80,7 +83,6 @@ def detectEyesFromFrame(originalFrame, model, face_cascade):
         # Map the Keypoints back to the originalFrame image
         face_resized_color = cv2.resize(color_crop_face, (96, 96), interpolation = cv2.INTER_AREA)
         face_resized_maskEyes = cv2.resize(maskEyes_crop_face, (96, 96), interpolation = cv2.INTER_AREA)
-
         # Pair them together
         for i, co in enumerate(keypoints[0][0::2]):
             points.append((co, keypoints[0][1::2][i]))
@@ -92,12 +94,13 @@ def detectEyesFromFrame(originalFrame, model, face_cascade):
     # show originalFrame picture with dots
     cv2.imshow("face detected", originalDots)
     # draw mask of eyes detected
-    leftEyePoints = [points[0], points[1], points[2], points[3], points[0]]
-    rightEyePoints = [points[10], points[11], points[12], points[13], points[10]]
-    ellipseLeftEye = cv2.fitEllipse(np.array(leftEyePoints))  #from 0 to 4 first eye
-    cv2.ellipse(face_resized_maskEyes,ellipseLeftEye,WHITE_COLOR,-1)
-    ellipseRightEye = cv2.fitEllipse(np.array(rightEyePoints))  #from 10 to 13 second eye
-    cv2.ellipse(face_resized_maskEyes,ellipseRightEye,WHITE_COLOR,-1)
+    frameNose = getNoseMask(face_resized_maskEyes, points)
+    cv2.imshow("noseMask", frameNose)
+    frameFace = getFaceMask(face_resized_maskEyes, points)
+    cv2.imshow("faceMask", frameFace)
+    face_resized_maskEyes = getEyeMask(face_resized_maskEyes, points)
+    cv2.imshow("face_resized_maskEyes", face_resized_maskEyes)
+
     maskEyes[y:y+h, x:x+w] = cv2.resize(face_resized_maskEyes, original_shape, interpolation = cv2.INTER_CUBIC)
     #cv2.imshow('mascara ojos', maskEyes)
     # use maskEyes to filter only the eyes of originalFrame image
