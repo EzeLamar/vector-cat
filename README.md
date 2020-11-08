@@ -1,3 +1,14 @@
+# Preparación
+Se deben agregar las carpetas:
+* *media*: contiene las imágenes de entrada y salida.
+    * *input*: donde se deben localizar las imágenes a analizar.s
+    * *output*: donde se guardarán las máscaras generadas.
+* *model*: contiene el modelo de la red neuronal utilizado para realizar la deteccion de punto de la cara.
+
+# Ejecución
+El archivo *principal.py* es el script que recibe una imagen de entrada y a partir de la misma genera la máscara (en caso que se detecte una cara). La máscara es almacenada en la carpeta *media/output*. En caso que no se detecte una cara, se informará con un mensaje de error y se cerrará el script.
+
+# Links utiles
 De donde saque el tuto para el calibrador:
     + https://pysource.com/2019/02/15/detecting-colors-hsv-color-space-opencv-with-python/
     + https://www.youtube.com/watch?v=SJCu1d4xakQ

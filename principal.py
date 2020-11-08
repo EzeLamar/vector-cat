@@ -5,11 +5,13 @@ import numpy as np
 from utils.modelNN.model import load
 from utils.faceSpotDetection.faceSpotsDetector import generateAllColoursMask
 from utils.eyesDetection.colorEyeDetector import getPrincipalEyeColourFromFrame
-from utils.cropCascade import cropCascade
+from utils.maskGenerator import cropCascade, getFaceMask
 
 # constants
 PATH_MODAL = './model/prueba100fotos_inv_2.sh'
 PATH_CASCADE = './cascade/haarcascade_frontalcatface.xml'
+PATH_OUTPUT_MASKFACE = './media/input/testDiferencia/hosico/'
+
 
 # Load the model built in the previous step
 model = load(os.path.abspath(PATH_MODAL))
@@ -19,15 +21,16 @@ face_cascade = cv2.CascadeClassifier(os.path.abspath(PATH_CASCADE))
 
 # get the image from the params & show the original
 imageName = sys.argv[1]
-frame = cv2.imread('./media/input/test/'+imageName+'.jpg',cv2.IMREAD_COLOR)
+frame = cv2.imread('./media/input/test/hosico/'+imageName+'.jpg',cv2.IMREAD_COLOR)
 cv2.imshow('originalFrame', frame)
 cv2.waitKey(0)
 
 # crop the cat face (if there is a cat face) & get the mask
-cropedFrame = cropCascade(frame,face_cascade)
-maskFrame = generateAllColoursMask(cropedFrame)
+cropedFrame, points = cropCascade(frame,face_cascade, model)
+maskFrame = generateAllColoursMask(cropedFrame,points)
 cv2.imshow('faceMaskColor', maskFrame)
+cv2.imwrite(os.path.join(PATH_OUTPUT_MASKFACE, '{}.png'.format(imageName)), maskFrame)
 # get the principal colour of the eyes cat
-getPrincipalEyeColourFromFrame(cropedFrame, model, face_cascade)
+getPrincipalEyeColourFromFrame(frame,model,face_cascade)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

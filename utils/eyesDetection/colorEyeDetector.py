@@ -41,7 +41,6 @@ def detectEyesFromFrame(originalFrame, model, face_cascade):
     }
 
     # Process current originalFrame
-    originalFrame = cv2.flip(originalFrame, 1)
     originalDots = originalFrame.copy()
     gray = cv2.cvtColor(originalFrame, cv2.COLOR_BGR2GRAY)
     maskEyes = np.zeros(originalFrame.shape,np.uint8)
@@ -139,7 +138,8 @@ def detectEyesFromFrame(originalFrame, model, face_cascade):
             break """
 
     for colour in eyeColours:
-        percentageColorArea[colour] = colorArea[colour]*100/totalColorArea
+        if totalColorArea != 0:
+            percentageColorArea[colour] = colorArea[colour]*100/totalColorArea
     return percentageColorArea
 
 def getPrincipalEyeColourFromFrame(originalFrame, model, face_cascade):

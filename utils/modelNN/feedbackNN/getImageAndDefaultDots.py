@@ -64,7 +64,6 @@ totalDetected = 0
 for filename in os.listdir(picturePath):
     # Process current original
     original = cv2.imread(picturePath+filename,cv2.IMREAD_COLOR)
-    original = cv2.flip(original, 1)
     originalDots = original.copy()
     gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
     maskEyes = np.zeros(original.shape,np.uint8)

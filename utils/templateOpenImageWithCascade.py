@@ -34,7 +34,6 @@ if __name__ == "__main__":
     frame = cv2.imread('./media/input/'+actualImage,cv2.IMREAD_COLOR)
 
     # Process current frame
-    frame = cv2.flip(frame, 1)
     color = frame
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 

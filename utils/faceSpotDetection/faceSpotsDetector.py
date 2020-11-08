@@ -2,6 +2,7 @@ import cv2
 import sys
 import os
 import numpy as np
+from utils.maskGenerator import getFaceMask
 
 def nothing(x):
     pass
@@ -9,10 +10,10 @@ def nothing(x):
 #constants
 MUST_WAIT = 0
 DONT_WAIT = 1
-PINK_BG = (120, 0, 255)
 BLACK_BG = (0, 0, 0)
 PINK_BG = (255,0,255)
 WHITE_BG = (255, 255, 255)
+BACKGROUND_MASK = (0,0,0)
 
 # default index
 boundariesSpotsHSV = {
@@ -29,8 +30,8 @@ FaceColours = {
     'gris': [200,200,200],       #gris          [1]
     'naranjaClaro': [84,168,255],    #naranjaClaro  [2]
     'naranjaOscuro': [0,56,112],   #naranjaOscuro [3]
-    'marron': [0,0,0],    #marron        [4]    DESCARTADO, lo uso como negro
-    'negro': [0,0,0],      #negro         [5]
+    'marron': [255,255,0],    #marron        [4]    DESCARTADO, lo uso como negro
+    'negro': [255,255,0],      #negro         [5]
 }
 
 NameColours = [
@@ -92,12 +93,16 @@ def extractSpotFromFrame(originalFrame, colourToFilter):
 
 # input: frame to get the spot colours
 # return: frame that contain the mask
-def generateAllColoursMask(frame):
+def generateAllColoursMask(frame, points):
     # finalMask
     black_frame = np.zeros(frame.shape,np.uint8)
     black_frame[:,:]= PINK_BG
-    finalFaceMask = black_frame.copy()
+    colorFaceMask = black_frame.copy()
+    faceMask = getFaceMask(frame,points)
 
     for colour in NameColours:
-        finalFaceMask[np.where((extractSpotFromFrame(frame,colour) == [255] ))] = FaceColours[colour]
-    return finalFaceMask
+        colorFaceMask[np.where((extractSpotFromFrame(frame,colour) == [255] ))] = FaceColours[colour]
+
+    #filter using mask
+    colorFaceMask[np.where((faceMask ==  BACKGROUND_MASK))] = [0]
+    return colorFaceMask

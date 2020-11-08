@@ -51,7 +51,6 @@ if __name__ == "__main__":
         if not ret: break
 
         # Process current frame
-        frame = cv2.flip(frame, 1)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # Detect faces
