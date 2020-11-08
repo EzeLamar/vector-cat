@@ -40,7 +40,7 @@ def get_architecture():
     model.add(Dense(128, activation='relu'))
     model.add(Dense(256, activation='relu'))
     model.add(Dense(64, activation='relu'))
-    model.add(Dense(34))
+    model.add(Dense(42))
 
     return model;
 

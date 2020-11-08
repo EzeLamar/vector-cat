@@ -8,7 +8,7 @@ from utils.eyesDetection.colorEyeDetector import getPrincipalEyeColourFromFrame
 from utils.maskBuilder import cropCascade, getFaceMask
 
 # constants
-PATH_MODAL = './model/prueba100fotos_inv_2.sh'
+PATH_MODAL = './model/prueba202fotos.sh'
 PATH_CASCADE = './cascade/haarcascade_frontalcatface.xml'
 PATH_OUTPUT_MASKFACE = './media/output/'
 

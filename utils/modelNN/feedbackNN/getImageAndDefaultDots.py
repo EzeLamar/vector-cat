@@ -8,7 +8,7 @@ import numpy as np
 #constants
 BLACK_BG = (0, 0, 0)
 WHITE_COLOR = (255,255,255)
-PATH_MODAL = '../../../model/prueba100fotos_inv_2.sh'
+PATH_MODAL = '../../../model/prueba202fotos.sh'
 PATH_CASCADE = '../../../cascade/haarcascade_frontalcatface.xml'
 DOTS = [
     'inEye_L',
