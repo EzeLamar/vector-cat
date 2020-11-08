@@ -5,6 +5,15 @@ Se deben agregar las carpetas:
     * *output*: donde se guardarán las máscaras generadas.
 * *model*: contiene el modelo de la red neuronal utilizado para realizar la deteccion de punto de la cara.
 
+## Agregar librerias de python
+```python
+# Update pip
+python -m pip install -U pip
+# Install scikit-image
+python -m pip install -U scikit-image`
+```
+
+
 # Ejecución
 El archivo *principal.py* es el script que recibe una imagen de entrada y a partir de la misma genera la máscara (en caso que se detecte una cara). La máscara es almacenada en la carpeta *media/output*. En caso que no se detecte una cara, se informará con un mensaje de error y se cerrará el script.
 
