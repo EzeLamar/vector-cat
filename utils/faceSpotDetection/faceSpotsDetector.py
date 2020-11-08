@@ -2,7 +2,7 @@ import cv2
 import sys
 import os
 import numpy as np
-from utils.maskGenerator import getFaceMask
+from utils.maskBuilder import getFaceMask
 
 def nothing(x):
     pass

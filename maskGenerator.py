@@ -5,7 +5,7 @@ import numpy as np
 from utils.modelNN.model import load
 from utils.faceSpotDetection.faceSpotsDetector import generateAllColoursMask
 from utils.eyesDetection.colorEyeDetector import getPrincipalEyeColourFromFrame
-from utils.maskGenerator import cropCascade, getFaceMask
+from utils.maskBuilder import cropCascade, getFaceMask
 
 # constants
 PATH_MODAL = './model/prueba100fotos_inv_2.sh'
