@@ -3,8 +3,8 @@ import cv2
 import os
 import sys
 
-PATH_OUTPUT_WEBCAM_CASCADE = "../media/output/webcamCascade/"
-PATH_CASCADE = '../cascade/haarcascade_frontalcatface.xml'
+PATH_OUTPUT_WEBCAM_CASCADE = "./media/input/webcamCascade/"
+PATH_CASCADE = './cascade/haarcascade_frontalcatface.xml'
 
 face_cascade = cv2.CascadeClassifier(os.path.abspath(PATH_CASCADE))
 # define a video capture object
@@ -14,7 +14,7 @@ while(True):
     # Capture the video frame
     # by frame
     ret, frame = vid.read()
-    frame = cv2.flip(frame, 1)
+    #frame = cv2.flip(frame, 1)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.25, 6)
     # Display the resulting frame
@@ -22,7 +22,7 @@ while(True):
 
     if len(faces) != 0:
         print('encontre cara de gato!')
-        cv2.imwrite(os.path.join(PATH_OUTPUT_WEBCAM_CASCADE, 'cat{}.jpg'.format(contador)), frame)
+        cv2.imwrite(os.path.join(PATH_OUTPUT_WEBCAM_CASCADE, 'webcam{}.jpg'.format(contador)), frame)
         contador = contador + 1
     # the 'q' button is set as the
     # quitting button you may use any
