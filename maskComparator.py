@@ -5,6 +5,10 @@ import numpy as np
 from skimage import measure
 import matplotlib.pyplot as plt
 
+PATH_INPUT_MASKFACE = './media/output/'
+PATH_INPUT_IMAGE = './media/input/'
+
+
 def mse(imageA, imageB):
 	# the 'Mean Squared Error' between the two images is the
 	# sum of the squared difference between the two images;
@@ -29,12 +33,27 @@ def compareMasks(imageA, imageB):
 	if (mseValue < 9500):
 		print('cat recognized :D')
 	else:
-		print('not found :(')
+		print('diferent cats :(')
 
 
 
 imageNameA = sys.argv[1]
 imageNameB = sys.argv[2]
-imageA = cv2.imread('./media/input/testDiferencia/mix/'+imageNameA+'.png',cv2.IMREAD_COLOR)
-imageB = cv2.imread('./media/input/testDiferencia/tom/'+imageNameB+'.png',cv2.IMREAD_COLOR)
-compareMasks(imageA,imageB)
+imageA = cv2.imread(PATH_INPUT_IMAGE+imageNameA+'.jpg',cv2.IMREAD_COLOR)
+imageB = cv2.imread(PATH_INPUT_IMAGE+imageNameB+'.jpg',cv2.IMREAD_COLOR)
+
+
+maskA = cv2.imread(PATH_INPUT_MASKFACE+imageNameA+'.png',cv2.IMREAD_COLOR)
+maskB = cv2.imread(PATH_INPUT_MASKFACE+imageNameB+'.png',cv2.IMREAD_COLOR)
+
+if imageA is None:
+	print(PATH_INPUT_MASKFACE+imageNameA+'.png')
+	print("Error: First image not found")
+elif imageB is None:
+	print("Error: Second image not found")
+else:
+	cv2.imshow('first image', imageA)
+	cv2.imshow('second image', imageB)
+	compareMasks(maskA,maskB)
+	cv2.waitKey(0)
+
