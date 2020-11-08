@@ -4,4 +4,6 @@ utils/__pycache__/*
 utils/eyesDetection/__pycache__/*
 utils/faceSpotDetection/__pycache__/*
 utils/modelNN/__pycache__/*
+utils/modelNN/generateCSV/input/*
+utils/modelNN/generateCSV/encoded.csv
 
