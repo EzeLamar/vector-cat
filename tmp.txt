@@ -1,0 +1,12 @@
+blanco:94.16232638888889
+gris:1.2261284722222223
+naranjaClaro:3.6024305555555554
+naranjaOscuro:0.0
+marron:0.0
+negro:1.2966579861111112
+
+naranja:0.0
+amarillo:4.032258064516129
+verde:0.0
+celeste:95.96774193548387
+celeste

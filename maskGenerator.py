@@ -6,8 +6,10 @@ from utils.modelNN.model import load
 from utils.faceSpotDetection.faceSpotsDetector import generateAllColoursMask
 from utils.eyesDetection.colorEyeDetector import getPrincipalEyeColourFromFrame
 from utils.maskBuilder import cropCascade, getFaceMask
+from utils.firebase.connection import postDataToFirebase
 
 # constants
+TMP_FILE_LOCATION = "./tmp.txt"
 PATH_MODAL = './model/prueba202fotos.sh'
 PATH_CASCADE = './cascade/haarcascade_frontalcatface.xml'
 PATH_OUTPUT_MASKFACE = './media/output/'
@@ -18,6 +20,10 @@ frame = cv2.imread('./media/input/'+imageName+'.jpg',cv2.IMREAD_COLOR)
 if frame is None:
     print("Error: image not found..")
 else:
+    # clean tmp file
+    tmpFileManager = open(TMP_FILE_LOCATION, 'w')   #in write mode
+    tmpFileManager.close()
+    
     # Load the model built in the previous step
     model = load(os.path.abspath(PATH_MODAL))
 
@@ -37,3 +43,5 @@ else:
     getPrincipalEyeColourFromFrame(frame,model,face_cascade)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    #post data to firebase database
+    postDataToFirebase(imageName,imageName)

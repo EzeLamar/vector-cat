@@ -9,6 +9,7 @@ from utils.maskBuilder import getNoseMask
 from utils.maskBuilder import getFaceMask
 
 #constants
+TMP_FILE_LOCATION = "./tmp.txt"
 BLACK_BG = (0, 0, 0)
 WHITE_COLOR = (255,255,255)
 eyeColours = [
@@ -148,8 +149,14 @@ def getPrincipalEyeColourFromFrame(originalFrame, model, face_cascade):
     # show percentage of every colour & calcultate the principal colour
     principalEyeColor = None
     print('\nPorcentajes detectados de los colores buscados:')
+    
+    # open the tmp file to write the area values of the mask
+    tmpFileManager = open(TMP_FILE_LOCATION, 'a')   #in append mode
+    tmpFileManager.write('\n')
     for colour in eyeColours:
         print('\t'+colour+': '+str(percentageColoursDetected[colour])+' %')
+        tmpFileManager.write(colour+':'+str(percentageColoursDetected[colour])+'\n')
+
         if principalEyeColor == None:
             principalEyeColor = colour
         elif percentageColoursDetected[principalEyeColor] < percentageColoursDetected[colour]:
@@ -157,3 +164,5 @@ def getPrincipalEyeColourFromFrame(originalFrame, model, face_cascade):
     print('-------------------------------')
     print('El color de ojos que mas aparece es "'+principalEyeColor+'"')
     print('-------------------------------')
+    tmpFileManager.write(principalEyeColor)
+    tmpFileManager.close()

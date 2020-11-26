@@ -15,9 +15,11 @@ PINK_BG = (255,0,255)
 WHITE_BG = (255, 255, 255)
 BACKGROUND_MASK = (0,0,0)
 
+TMP_FILE_LOCATION = "./tmp.txt"
+
 # default index
 boundariesSpotsHSV = {
-    'blanco' : ([0,0,162],[179,51,255]),       #blanco        [0]  listo
+    'blanco' : ([0,0,106],[179,75,255]),       #blanco        [0]  listo
     'gris' : ([27,0,0],[179,76,140]),       #gris          [1]    listo
     'naranjaClaro' : ([10,60,108],[26,171,255]),     #naranjaClaro  [2]  listo
     'naranjaOscuro' : ([10,130,125],[15,255,200]),   #naranjaOscuro [3]   listo
@@ -79,10 +81,15 @@ def extractSpotFromFrame(originalFrame, colourToFilter):
     # calculate area of this color in the image
     totalArea = np.size(originalFrame, 0) * np.size(originalFrame, 1)
     colorArea = 0
+    # open the tmp file to write the area values of the mask
+    tmpFileManager = open(TMP_FILE_LOCATION, 'a')   #in append mode
     for c in cnts:
         colorArea += cv2.contourArea(c)
     percentageArea = (colorArea*100)/totalArea
     print('\t'+colourToFilter+' Area:'+str(percentageArea)+'%')
+    tmpFileManager.write(colourToFilter+':'+str(percentageArea)+'\n')
+    tmpFileManager.close()
+
 
     #cv2.imshow("originalFrame", originalFrame)
     #cv2.imshow("mask", mask)

@@ -12,12 +12,24 @@ python -m pip install -U pip
 # Install scikit-image
 python -m pip install -U scikit-image`
 ```
-
+# Scripts
+## cutImageForCasscade.py
+Este script recibe el nombre de una imagen jpg dentro de la carpeta *media/input/* y genera un equivalente compatible en blanco y negro para entrenar a la NN. La salida es en *media/output/forTraining* (se debe crear la carpeta antes de usar).
+## maskGenerator.py
+Este script recibe el nombre de una imagen jpg dentro de la carpeta *media/input/* y genera una máscara de la cara del gato (si es que fue detectada correctamente). La salida es en *media/output/*.
+## maskComparator.py
+Este script recibe el nombre de 2 máscaras en la carpeta *media/output/* y compara si corresponden al mismo gato.
+## picturesCompatibleWithCasscade.py
+Este script inicializa la cámara web y si detecta gatos (según el har-casscade) las almacena dentro de la carpeta *media/webcamCascade/* (debe ser creada la carpeta antes de usar).
 
 # Ejecución
 El archivo *principal.py* es el script que recibe una imagen de entrada y a partir de la misma genera la máscara (en caso que se detecte una cara). La máscara es almacenada en la carpeta *media/output*. En caso que no se detecte una cara, se informará con un mensaje de error y se cerrará el script.
 
 # Links utiles
+
+Firebase
+https://morioh.com/p/4dca3ded4cea
+
 De donde saque el tuto para el calibrador:
     + https://pysource.com/2019/02/15/detecting-colors-hsv-color-space-opencv-with-python/
     + https://www.youtube.com/watch?v=SJCu1d4xakQ

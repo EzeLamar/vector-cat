@@ -19,7 +19,7 @@ waitingKey = DONT_WAIT
 index = 1
 prevIndex = 1
 boundariesEyeHSV = [
-    ([0,0,162],[179,51,255]),       #blanco        [0]  listo
+    ([0,0,106],[179,75,255]),       #blanco        [0]  listo
     ([27,0,0],[179,76,140]),       #gris          [1]    listo
     ([10,60,108],[26,171,255]),     #naranjaClaro  [2]  listo
     ([10,130,125],[15,255,200]),   #naranjaOscuro [3]   listo
